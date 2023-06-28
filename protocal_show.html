@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>网络报文分析教学平台</title>
+  <link rel="stylesheet" href="./layui-v2.6.8/layui/css/layui.css">
+  <script src="./layui-v2.6.8/layui/layui.js"></script>
+  <script src="./jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo layui-hide-xs layui-bg-black">主页</div>
+    <!-- 头部区域（可配合layui 已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left nav-pills">
+      <!-- 移动端显示 -->
+      <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+        <i class="layui-icon layui-icon-spread-left"></i>
+      </li>
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+        <a href="javascript:;">
+          <img src="touxiang.jpg" class="layui-nav-img">
+          tester
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">Your Profile</a></dd>
+          <dd><a href="">Settings</a></dd>
+          <dd><a href="">Sign out</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more-vertical"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item"><a href="./input_form.html">输入表单</a></li>
+        <li class="layui-nav-item"><a href="./protocal_show.html#show_1">协议栈展示</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div style="padding: 15px; height: 650px;">
+      <div id="message_table_div" style="height: 42%; overflow-y: scroll; margin-top: 20px;">
+        <div style="width: 99%;">
+          <table class="layui-hide" lay-filter="message_table" id="message_table"></table>
+        </div>
+      </div>
+      <div id="message_detail_div" style="height: 53%; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+      padding: 20px; margin-top: 10px;">
+        报文详情信息部分
+      </div>
+    </div>
+  </div>
+  
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    底部固定区域
+  </div>
+</div>
+
+<script>
+//JS 
+layui.use(['element', 'layer', 'util'], function(){
+  var element = layui.element
+  ,layer = layui.layer
+  ,util = layui.util
+  ,$ = layui.$;
+  
+  //头部事件
+  util.event('lay-header-event', {
+    //左侧菜单事件
+    menuLeft: function(othis){
+      layer.msg('展开左侧菜单的操作', {icon: 0});
+    }
+    ,menuRight: function(){
+      layer.open({
+        type: 1
+        ,content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
+        ,area: ['260px', '100%']
+        ,offset: 'rt' //右上角
+        ,anim: 5
+        ,shadeClose: true
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
+
+<!-- 表格渲染 -->
+<script src="./sample_message.js"></script>
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  
+  table.render({
+    elem: '#message_table'
+    // ,url: './sample_message.json'
+    ,cellMinWidth: 80
+    // ,page: true
+    ,limit: 1000
+    ,cols: [[
+      {field:'1', title: 'No.'}
+      ,{field:'2', title: 'Time'}
+      ,{field:'3', title: 'Source'}
+      ,{field:'4', title: 'Destination'}
+      ,{field:'5', title: 'Protocal', sort: true}
+      ,{field:'6', title: 'Length'}
+      ,{field:'7', title: 'Info', minWidth: 50}
+    ]]
+    ,data: sample_data
+    , done: function () {//表格渲染完成的回调函数                                    
+       $(".layui-table-header").addClass('table-header-fixed')  //添加样式，固定住表头
+    }
+  });
+
+  //监听行单击事件（双击事件为：rowDouble）
+  table.on('row(message_table)', function(obj){
+    var data = obj.data;
+    
+    // layer.alert(JSON.stringify(data), {
+      // title: '当前行数据：'
+    // });
+    
+    //标注选中样式
+    obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+
+    //展示选中数据详情
+    document.getElementById('message_detail_div').innerHTML = JSON.stringify(data);
+  });
+});
+</script>
+
+<style type="text/css">
+.table-header-fixed {
+    position: fixed;
+    z-index: 99;
+    transform: translateY(-37px);
+}
+</style>
