@@ -109,7 +109,8 @@ layui.use('table', function(){
   
   table.render({
     elem: '#message_table'
-    // ,url: './sample_message.json'
+    ,url: './packet/get'
+    // ,data: sample_data   // 使用测试数据做演示
     ,cellMinWidth: 80
     // ,page: true
     ,limit: 1000
@@ -122,7 +123,6 @@ layui.use('table', function(){
       ,{field:'6', title: 'Length'}
       ,{field:'7', title: 'Info', minWidth: 50}
     ]]
-    ,data: sample_data
     , done: function () {//表格渲染完成的回调函数                                    
        $(".layui-table-header").addClass('table-header-fixed')  //添加样式，固定住表头
     }
@@ -140,7 +140,7 @@ layui.use('table', function(){
     obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 
     //展示选中数据详情
-    document.getElementById('message_detail_div').innerHTML = JSON.stringify(data);
+    document.getElementById('message_detail_div').innerHTML = JSON.stringify(data);  // 测试，直接展示当前行信息
   });
 });
 </script>
